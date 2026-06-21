@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Buzzy's Fruit School — Task 1</title>
+<style>
+  :root{
+    --blue:#1f4e79; --blue-light:#dbe6f3; --green:#2e7d32; --green-bg:#e7f5e8;
+    --red:#c62828; --red-bg:#fdecec; --ink:#1d2733; --muted:#5b6b7b; --line:#e2e8f0;
+  }
+  *{box-sizing:border-box}
+  body{
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+    margin:0; background:#f4f6f9; color:#1d2733; line-height:1.5;
+    display:flex; justify-content:center; padding:24px;
+  }
+  .card{
+    background:#fff; max-width:680px; width:100%; border-radius:14px;
+    box-shadow:0 6px 24px rgba(0,0,0,.08); overflow:hidden;
+  }
+  .header{ background:#1f4e79; color:#fff; padding:22px 26px; }
+  .header .tag{ font-size:12px; letter-spacing:.5px; text-transform:uppercase; opacity:.85; }
+  .header h1{ margin:6px 0 0; font-size:22px; }
+  .header .meta{ margin-top:6px; font-size:13px; opacity:.85; }
+  .body{ padding:26px; }
+  .story{ font-size:15px; }
+  table{ border-collapse:collapse; width:100%; margin:16px 0; font-size:14px; }
+  th{ background:#1f4e79; color:#fff; padding:8px 10px; text-align:left; font-weight:600; }
+  td{ padding:8px 10px; border-bottom:1px solid #e2e8f0; }
+  .sweet{ color:#2e7d32; font-weight:700; }
+  .sour{ color:#c62828; font-weight:700; }
+  .qbox{ background:#dbe6f3; border-radius:10px; padding:14px 16px; margin:20px 0 14px;
+    font-weight:700; color:#1f4e79; font-size:16px; }
+  .opt{ display:block; border:2px solid #e2e8f0; border-radius:10px; padding:13px 15px;
+    margin:10px 0; cursor:pointer; transition:.15s; font-size:15px; }
+  .opt:hover{ border-color:#1f4e79; background:#f7faff; }
+  .opt input{ margin-right:10px; }
+  .opt.correct{ border-color:#2e7d32; background:#e7f5e8; }
+  .opt.wrong{ border-color:#c62828; background:#fdecec; }
+  .opt.disabled{ cursor:default; pointer-events:none; }
+  .btn{ background:#1f4e79; color:#fff; border:0; border-radius:10px; padding:12px 22px;
+    font-size:15px; font-weight:600; cursor:pointer; margin-top:6px; }
+  .btn:disabled{ opacity:.45; cursor:not-allowed; }
+  .btn.secondary{ background:#fff; color:#1f4e79; border:2px solid #1f4e79; margin-left:8px; }
+  .result{ display:none; margin-top:18px; border-radius:10px; padding:16px 18px; font-size:15px; }
+  .result.show{ display:block; }
+  .result.pass{ background:#e7f5e8; border:1px solid #b6dcb8; }
+  .result.fail{ background:#fdecec; border:1px solid #f1bcbc; }
+  .result .score{ font-weight:800; font-size:18px; margin-bottom:6px; }
+  .result h3{ margin:14px 0 4px; font-size:14px; color:#1f4e79; }
+  .result ul{ margin:6px 0 0; padding-left:18px; }
+  .result li{ margin:3px 0; }
+</style>
+</head>
+<body>
+  <div class="card">
+    <div class="header">
+      <div class="tag">Task 1 · Youngest Category · Supervised Learning</div>
+      <h1>Buzzy's Fruit School</h1>
+      <div class="meta">Difficulty: Easy/Medium · Multiple choice · ~3 minutes</div>
+    </div>
+    <div class="body">
+      <div class="story">
+        <p>Buzzy is a little robot bee who works in a fruit garden. Buzzy has never seen fruit before,
+        so the gardener teaches Buzzy which fruits are <span class="sweet">SWEET</span> and which fruits are <span class="sour">SOUR</span>.</p>
+        <p>The gardener picks up fruits one at a time and tells Buzzy what each one tastes like:</p>
+        <table>
+          <tr><th>Fruit</th><th>Colour</th><th>Size</th><th>Texture</th><th>Gardener says</th></tr>
+          <tr><td>🍓 Strawberry</td><td>Red</td><td>Small</td><td>Rough</td><td class="sweet">SWEET</td></tr>
+          <tr><td>🍋 Lemon</td><td>Yellow</td><td>Small</td><td>Smooth</td><td class="sour">SOUR</td></tr>
+          <tr><td>🍒 Cherry</td><td>Red</td><td>Small</td><td>Smooth</td><td class="sweet">SWEET</td></tr>
+          <tr><td>🟡 Grapefruit</td><td>Yellow</td><td>Big</td><td>Smooth</td><td class="sour">SOUR</td></tr>
+        </table>
+        <p>Buzzy looks at the table very carefully and notices something about the colours!</p>
+        <p>Now, a new fruit arrives: a <strong>Red Apple</strong>. It is red, big, and smooth.</p>
+      </div>
+
+      <div class="qbox">Question: What will Buzzy say about the red apple?</div>
+
+      <form id="quiz">
+        <label class="opt" data-key="A"><input type="radio" name="q" value="A">A) "SWEET!" — because all the red fruits were sweet</label>
+        <label class="opt" data-key="B"><input type="radio" name="q" value="B">B) "SOUR!" — because all the smooth fruits were sour</label>
+        <label class="opt" data-key="C"><input type="radio" name="q" value="C">C) "I don't know" — because Buzzy has never seen an apple before</label>
+        <label class="opt" data-key="D"><input type="radio" name="q" value="D">D) "SWEET!" — because the apple is big</label>
+
+        <button type="button" class="btn" id="submit" disabled>Submit answer</button>
+        <button type="button" class="btn secondary" id="retry" style="display:none">Try again</button>
+      </form>
+
+      <div class="result" id="result"></div>
+    </div>
+  </div>
+
+<script>
+  var CORRECT = "A";
+  var EXPLAIN = {
+    correct: "Both red fruits in the lessons (strawberry &amp; cherry) were SWEET, so Buzzy learns the rule <b>Red = Sweet</b> and predicts SWEET for the red apple.",
+    why: [
+      "<b>B is wrong:</b> not all smooth fruits are sour — the cherry is smooth AND sweet, so \"smooth = sour\" is not consistent.",
+      "<b>C is wrong:</b> Buzzy doesn't need to have seen an apple before. It applies the rule learned from the examples.",
+      "<b>D is wrong:</b> right answer (SWEET) but wrong reason. Size doesn't predict taste — the small strawberry and the big grapefruit differ in taste."
+    ],
+    concept: "This is <b>supervised learning</b>: an AI learns a rule from labelled examples (the gardener's lessons) and uses it to predict the label of something new it has never seen."
+  };
+
+  var opts = document.querySelectorAll('.opt');
+  var submitBtn = document.getElementById('submit');
+  var retryBtn = document.getElementById('retry');
+  var resultBox = document.getElementById('result');
+
+  document.querySelectorAll('input[name="q"]').forEach(function(r){
+    r.addEventListener('change', function(){ submitBtn.disabled = false; });
+  });
+
+  submitBtn.addEventListener('click', function(){
+    var picked = document.querySelector('input[name="q"]:checked');
+    if(!picked) return;
+    var val = picked.value;
+    var isRight = (val === CORRECT);
+
+    opts.forEach(function(o){
+      o.classList.add('disabled');
+      var k = o.getAttribute('data-key');
+      if(k === CORRECT) o.classList.add('correct');
+      else if(k === val) o.classList.add('wrong');
+    });
+    document.querySelectorAll('input[name="q"]').forEach(function(i){ i.disabled = true; });
+    submitBtn.style.display = 'none';
+    retryBtn.style.display = 'inline-block';
+
+    resultBox.className = 'result show ' + (isRight ? 'pass' : 'fail');
+    resultBox.innerHTML =
+      '<div class="score">' + (isRight ? '✅ Correct! Score: 1 / 1' : '❌ Not quite. Score: 0 / 1 — correct answer is A') + '</div>' +
+      '<div>' + EXPLAIN.correct + '</div>' +
+      '<h3>Why the other answers are wrong</h3>' +
+      '<ul><li>' + EXPLAIN.why.join('</li><li>') + '</li></ul>' +
+      '<h3>Connection to AI</h3>' +
+      '<div>' + EXPLAIN.concept + '</div>';
+    resultBox.scrollIntoView({behavior:'smooth', block:'nearest'});
+  });
+
+  retryBtn.addEventListener('click', function(){
+    opts.forEach(function(o){ o.classList.remove('disabled','correct','wrong'); });
+    document.querySelectorAll('input[name="q"]').forEach(function(i){ i.disabled = false; i.checked = false; });
+    submitBtn.style.display = 'inline-block';
+    submitBtn.disabled = true;
+    retryBtn.style.display = 'none';
+    resultBox.className = 'result';
+  });
+</script>
+</body>
+</html>
